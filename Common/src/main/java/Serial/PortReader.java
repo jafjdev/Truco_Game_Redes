@@ -22,7 +22,7 @@ public class PortReader implements SerialPortEventListener
             try
             {
                 String data = this.serialPort.readString(serialPortEvent.getEventValue());
-                System.out.println("Recibido: "+data);
+                System.out.println("Recibido: " + data);
             }
             catch (Exception e)
             {

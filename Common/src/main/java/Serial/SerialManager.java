@@ -1,9 +1,14 @@
 package Serial;
 
+import java.security.Principal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jssc.SerialPort;
 import jssc.SerialPortList;
-
 import javax.swing.*;
+import static jssc.SerialPort.MASK_RXCHAR;
+import jssc.SerialPortEvent;
+import jssc.SerialPortException;
 
 public class SerialManager
 {
@@ -22,7 +27,7 @@ public class SerialManager
      * FINAL DE TRAMA       (%%)
      * */
     private static SerialPort serialPort;
-    public static void start()
+    public  void start()
     {
         String[] portNames = SerialPortList.getPortNames();
         String s=(String) JOptionPane.showInputDialog(new JFrame("NADA"),"Introduce el puerto",
@@ -51,7 +56,61 @@ public class SerialManager
         }
     }
     
-    
+    public boolean conectarHardware(String port) {
+        //Esta es la función que nos permite conectarnos a puerto serial,
+        //para esto tenemos que enviarle el nombre del puerto seleccionado
+        serialPort = new SerialPort(port);
+        System.out.println("Conectado al puerto:" + " " + port);
+        boolean success = false;
+
+        //Aqui configuramos los parámetros del puerto serial
+        try {
+            serialPort.openPort();
+            serialPort.setParams(
+                    SerialPort.BAUDRATE_9600,
+                    SerialPort.DATABITS_8,
+                    SerialPort.STOPBITS_1,
+                    SerialPort.PARITY_NONE);
+            serialPort.setEventsMask(MASK_RXCHAR);
+            
+
+            success = true;
+        } catch (SerialPortException ex) {
+            Logger.getLogger(Principal.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            System.out.println("Error al tratar de conectarse al puerto" + port);
+            JOptionPane.showMessageDialog(null, "No se pudo realizar la conexión, por favor seleccione otro puerto:" + " " + port);
+        }
+        return success;
+    }
+
+    public void detectarPuertos() {
+        //Esta función nos permite detectar los puerto COM disponibles en nuestra PC
+        String[] portNames = SerialPortList.getPortNames();
+        String s = (String) JOptionPane.showInputDialog(new JFrame("NADA"), "Introduce el puerto",
+                "Configuración de puerto", JOptionPane.QUESTION_MESSAGE, null,
+                portNames, portNames[0]);
+        conectarHardware(s);
+        
+    }
+
+    public void desconectar() {
+        //Esta función es la que utilizamos para desconectarnos del puerto COM
+        if (serialPort != null) {//Verificamos si estamos conectados
+            try {
+                serialPort.removeEventListener();
+                if (serialPort.isOpened()) {
+                    serialPort.closePort();
+                    System.out.println("Se ha desconectado del puerto exitosamente");
+                }
+
+                serialPort = null;
+            } catch (SerialPortException ex) {
+                Logger.getLogger(Principal.class.getName())
+                        .log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     public static void sentTurno()
     {
 
