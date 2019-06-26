@@ -9,7 +9,8 @@ public class UITest
     public static void main(String []args)
     {
         //Para saltar configuración de puertos, comentar línea de abajo
-        SerialManager.start();
+        SerialManager.detectarPuertos();
+        SerialManager.conectarHardware();
         ArrayList<PlayPlayer> players=new ArrayList<PlayPlayer>();
         Collections.addAll(players,
                 new GraphicPlayer(0,"ROLANDO", new GraphicHand()),

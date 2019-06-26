@@ -29,7 +29,7 @@ public class SerialManager
     private static SerialPort serialPort;
     
     
-    public boolean conectarHardware() {
+    public static boolean conectarHardware() {
         //Funcion para conectarse al puerto
         System.out.println("Conectado al puerto");
         boolean success = false;
@@ -68,7 +68,7 @@ public class SerialManager
         return success;
     }
 
-    public void detectarPuertos() {
+    public static void detectarPuertos() {
         //Detectar los puerto COM disponibles en nuestra PC
         String[] portNames = SerialPortList.getPortNames();
         String s = (String) JOptionPane.showInputDialog(new JFrame("NADA"), "Introduce el puerto",
@@ -78,7 +78,7 @@ public class SerialManager
         
     }
 
-    public void desconectar() {
+    public static void desconectar() {
         //Esta función es la que utilizamos para desconectarnos del puerto COM
         if (serialPort != null) {//Verificamos si estamos conectados
             try {
@@ -96,7 +96,7 @@ public class SerialManager
         }
     }
     
-    public void sentTrama(String trama){
+    public static void sentTrama(String trama){
         //En este evento realizamos la escritura en el puerto serial
         
         if(serialPort != null){//Verificamos que estamos conectados a el puerto serial
